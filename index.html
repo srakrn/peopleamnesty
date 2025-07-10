@@ -16,8 +16,23 @@
             background-position: center center;
         }
 
-        .secondstep {
+        .second-step {
             display: none;
+        }
+
+        #preview-wrapper {
+            position: relative;
+        }
+
+        #circle-guide {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 100%;
+            /* no goddamn idea why but 99% works */
+            height: 99%;
+            border: 2px dashed grey;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -44,9 +59,12 @@
                         <input type="file" id="fileInput" accept="image/*">
                     </div>
                 </div>
-                <div class="card mb-3 secondstep">
+                <div class="card mb-3 second-step">
                     <div class="card-body">
                         <h5 class="card-title">ขยับข้อความ</h5>
+                        <p><small><strong>คำแนะนำ: </strong>ปรับให้ข้อความอยู่ในวงกลมเส้นประ
+                                เมื่ออัปโหลดขึ้นบนโซเชียลมีเดีย จะได้ไม่มีส่วนของข้อความที่ตกขอบ (ภาพที่ดาวน์โหลด
+                                จะไม่มีวงกลมเส้นประ)</small></p>
                         <label for="scaleSlider" class="form-label">ขนาด เล็ก-ใหญ่</label>
                         <input type="range" class="form-range" id="scaleSlider" min="0.1" max="1" step="0.01" value="1">
                         <label for="scaleSlider" class="form-label">ซ้าย-ขวา</label>
@@ -65,9 +83,10 @@
                         href="https://www.parliament.go.th/section77/manage/files/file_20240513163026_1_385.pdf">ได้ที่นี่</a>
                 </div>
             </div>
-            <div class="col-lg secondstep">
-                <div>
-                    <canvas id="canvas" class="border bg-white mb-3" width="1024" height="1024"></canvas>
+            <div class="col-lg second-step">
+                <div id="preview-wrapper" class="mb-3">
+                    <canvas id="canvas" class="border bg-white" width="1024" height="1024"></canvas>
+                    <div id="circle-guide"></div>
                 </div>
             </div>
         </div>
@@ -86,8 +105,6 @@
             </div>
         </div>
     </div>
-
-
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
@@ -170,7 +187,7 @@
             // event listener for image selection
 
             // show second step divs (sliders, canvas preview, save button)
-            const elements = document.querySelectorAll('.secondstep');
+            const elements = document.querySelectorAll('.second-step');
             console.log(elements);
             for (let i = 0; i < elements.length; i++) {
                 elements[i].style.display = "block";

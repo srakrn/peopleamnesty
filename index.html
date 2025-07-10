@@ -47,6 +47,11 @@
                         <input type="range" class="form-range" id="xSlider" min="0" max="0" step="1" value="0">
                         <label for="ySlider" class="form-label">บน-ล่าง</label>
                         <input type="range" class="form-range" id="ySlider" min="0" max="0" step="1" value="0">
+                        <button type="button" class="btn btn-success w-100" data-bs-toggle="modal"
+                            data-bs-target="#finalRenderModal" onclick="finalRenderer()">
+                            บันทึกรูป
+                        </button>
+
                     </div>
                 </div>
                 <div class="alert alert-primary" role="alert">
@@ -57,15 +62,30 @@
             <div class="col-lg secondstep">
                 <div>
                     <canvas id="canvas" class="border bg-white mb-3" width="1024" height="1024"></canvas>
-                    <div class="alert alert-success secondstep" role="alert">
-                        เมื่อปรับขนาดจนพอใจแล้ว สามารถกดค้าง-คลิกขวาที่รูป เพื่อเซฟได้เลย (หากไม่ได้ ลองกด <a href="#"
-                            onclick="redirectToImageData()">ที่นี่</a>)
-                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="finalRenderModal" tabindex="-1" aria-labelledby="finalRenderModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="finalRenderModalLabel">กดค้าง-คลิกขวา บันทึกรูปด้านล่างได้เลย</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img id="finalRender" width=" 100%" />
                 </div>
             </div>
         </div>
     </div>
 
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+        crossorigin="anonymous"></script>
     <script>
         const fileInput = document.getElementById('fileInput');
         const canvas = document.getElementById('canvas');
@@ -76,7 +96,10 @@
         const xSlider = document.getElementById('xSlider');
         const ySlider = document.getElementById('ySlider');
 
+        const finalRender = document.getElementById('finalRender');
+
         const overlayImg = new Image();
+        overlayImg.crossOrigin = "anonymous"
         overlayImg.src = './amnesty-overlay.png';
 
         let baseImage = null;
@@ -176,9 +199,9 @@
             updateOffsetSliders();
         }
 
-        function redirectToImageData() {
+        function finalRenderer() {
             var data = canvas.toDataURL("image/png");
-            document.location.href = data;
+            finalRender.src = data;
         }
     </script>
 </body>

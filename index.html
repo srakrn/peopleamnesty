@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>กรอบรูป นิรโทษกรรมประชาชน</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <style type="text/css">
+        body {
+            background: url("./bg.jpg");
+            background-size: 100% auto;
+        }
+
+        .secondstep {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar bg-primary mb-3">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="#">กรอบรูป นิรโทษกรรมประชาชน</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">เลือกรูป</h5>
+                        <p class="mb-0">แนะนำให้ครอปรูปให้เป็นสี่เหลี่ยมจัตุรัสก่อน</p>
+                        <p><small>รูปของท่านจะถูกประมวลผลในเครื่องแบบออฟไลน์
+                                ไม่มีการส่งรูปมายังเซิร์ฟเวอร์ของเราแต่อย่างใด</small></p>
+                        <input type="file" id="fileInput" accept="image/*">
+                    </div>
+                </div>
+                <div class="card mb-3 secondstep">
+                    <div class="card-body">
+                        <h5 class="card-title">ขยับข้อความ</h5>
+                        <label for="scaleSlider" class="form-label">ขนาด เล็ก-ใหญ่</label>
+                        <input type="range" class="form-range" id="scaleSlider" min="0.1" max="1" step="0.01" value="1">
+                        <label for="scaleSlider" class="form-label">ซ้าย-ขวา</label>
+                        <input type="range" class="form-range" id="xSlider" min="0" max="0" step="1" value="0">
+                        <label for="ySlider" class="form-label">บน-ล่าง</label>
+                        <input type="range" class="form-range" id="ySlider" min="0" max="0" step="1" value="0">
+                    </div>
+                </div>
+                <div class="alert alert-success secondstep" role="alert">
+                    เมื่อปรับขนาดจนพอใจแล้ว สามารถกดค้าง-คลิกขวาที่รูป เพื่อเซฟได้เลย
+                </div>
+                <div class="alert alert-primary" role="alert">
+                    อ่านร่างพระราชบัญญัตินิรโทษกรรมประชาชน ฉบับร่างของประชาชน <a
+                        href="https://www.parliament.go.th/section77/manage/files/file_20240513163026_1_385.pdf">ได้ที่นี่</a>
+                </div>
+            </div>
+            <div class="col-lg secondstep">
+                <div>
+                    <canvas id="canvas" class="border bg-white" width="1024" height="1024"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.style.width = "100%";
+
+        const scaleSlider = document.getElementById('scaleSlider');
+        const xSlider = document.getElementById('xSlider');
+        const ySlider = document.getElementById('ySlider');
+
+        const overlayImg = new Image();
+        overlayImg.src = './amnesty-overlay.png';
+
+        let baseImage = null;
+        let baseDims = { x: 0, y: 0, width: 0, height: 0 };
+        let overlayScale = parseFloat(scaleSlider.value);
+        let overlayX = 0;
+        let overlayY = 0;
+
+        function updateOffsetSliders() {
+            if (!overlayImg.complete) return;
+            const cw = canvas.width;
+            const ch = canvas.height;
+            const oW = overlayImg.naturalWidth * overlayScale;
+            const oH = overlayImg.naturalHeight * overlayScale;
+            const maxX = Math.max(0, cw - oW);
+            const maxY = Math.max(0, ch - oH);
+            xSlider.min = 0;
+            xSlider.max = maxX;
+            ySlider.min = 0;
+            ySlider.max = maxY;
+            overlayX = Math.min(Math.max(overlayX, 0), maxX);
+            overlayY = Math.min(Math.max(overlayY, 0), maxY);
+            xSlider.value = overlayX;
+            ySlider.value = overlayY;
+        }
+
+        function drawAll() {
+            const cw = canvas.width;
+            const ch = canvas.height;
+            ctx.clearRect(0, 0, cw, ch);
+            if (baseImage) {
+                ctx.drawImage(
+                    baseImage,
+                    0, 0, baseImage.width, baseImage.height,
+                    baseDims.x, baseDims.y, baseDims.width, baseDims.height
+                );
+            }
+            if (overlayImg.complete) {
+                const oW = overlayImg.naturalWidth * overlayScale;
+                const oH = overlayImg.naturalHeight * overlayScale;
+                ctx.drawImage(
+                    overlayImg,
+                    overlayX, overlayY, oW, oH
+                );
+            }
+        }
+
+        overlayImg.onload = () => {
+            updateOffsetSliders();
+            drawAll();
+        };
+
+        fileInput.addEventListener('change', event => {
+            const elements = document.querySelectorAll('.secondstep');
+            console.log(elements);
+            for (let i = 0; i < elements.length; i++) {
+                elements[i].style.display = "block";
+            }
+
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+
+            reader.onload = e => {
+                const img = new Image();
+                img.onload = () => {
+                    const cw = canvas.width;
+                    const ch = canvas.height;
+                    const scale = Math.max(cw / img.width, ch / img.height);
+                    const x = (cw - img.width * scale) / 2;
+                    const y = (ch - img.height * scale) / 2;
+                    baseImage = img;
+                    baseDims = { x, y, width: img.width * scale, height: img.height * scale };
+                    updateOffsetSliders();
+                    drawAll();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+
+        scaleSlider.addEventListener('input', e => {
+            overlayScale = parseFloat(e.target.value);
+            updateOffsetSliders();
+            drawAll();
+        });
+        xSlider.addEventListener('input', e => {
+            overlayX = parseInt(e.target.value, 10);
+            drawAll();
+        });
+        ySlider.addEventListener('input', e => {
+            overlayY = parseInt(e.target.value, 10);
+            drawAll();
+        });
+
+        if (overlayImg.complete) {
+            updateOffsetSliders();
+        }
+    </script>
+</body>
+
+</html>

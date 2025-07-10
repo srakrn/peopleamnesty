@@ -49,9 +49,6 @@
                         <input type="range" class="form-range" id="ySlider" min="0" max="0" step="1" value="0">
                     </div>
                 </div>
-                <div class="alert alert-success secondstep" role="alert">
-                    เมื่อปรับขนาดจนพอใจแล้ว สามารถกดค้าง-คลิกขวาที่รูป เพื่อเซฟได้เลย
-                </div>
                 <div class="alert alert-primary" role="alert">
                     อ่านร่างพระราชบัญญัตินิรโทษกรรมประชาชน ฉบับร่างของประชาชน <a
                         href="https://www.parliament.go.th/section77/manage/files/file_20240513163026_1_385.pdf">ได้ที่นี่</a>
@@ -59,7 +56,11 @@
             </div>
             <div class="col-lg secondstep">
                 <div>
-                    <canvas id="canvas" class="border bg-white" width="1024" height="1024"></canvas>
+                    <canvas id="canvas" class="border bg-white mb-3" width="1024" height="1024"></canvas>
+                    <div class="alert alert-success secondstep" role="alert">
+                        เมื่อปรับขนาดจนพอใจแล้ว สามารถกดค้าง-คลิกขวาที่รูป เพื่อเซฟได้เลย (หากไม่ได้ ลองกด <a href="#"
+                            onclick="redirectToImageData()">ที่นี่</a>)
+                    </div>
                 </div>
             </div>
         </div>
@@ -173,6 +174,11 @@
 
         if (overlayImg.complete) {
             updateOffsetSliders();
+        }
+
+        function redirectToImageData() {
+            var data = canvas.toDataURL("image/png");
+            document.location.href = data;
         }
     </script>
 </body>

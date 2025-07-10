@@ -51,11 +51,9 @@
                     <div class="card-body">
                         <h5 class="card-title">เลือกรูป</h5>
                         <p class="mb-0">แนะนำให้ครอปรูปให้เป็นสี่เหลี่ยมจัตุรัสก่อน</p>
-                        <p><small>รูปของท่านจะถูกประมวลผลในเครื่องแบบออฟไลน์
-                                โดยไม่มีการส่งรูปไปที่เซิร์ฟเวอร์ของเรา นอกจากนี้
-                                เว็บไม่มีการเก็บข้อมูลส่วนตัว ไม่มีการใช้คุกกี้ในทุกจุดประสงค์ (อาทิ
-                                การติดตามผู้ใช้ การบันทึกข้อมูลในเครื่องชั่วคราว) และไม่มีการส่งกลับข้อมูลทางไกล
-                                (telemetry) ไปสู่เซิร์ฟเวอร์ของเว็บนี้ และของบุคคลที่สามใดๆ</small></p>
+                        <p><small>เพื่อความเป็นส่วนตัวถึงที่สุดของท่าน รูปที่ท่านเลือก จะถูกประมวลผลในเครื่องของท่านเอง
+                                ไม่มีการส่งรูปและ/หรือข้อมูลใดๆ ออกไปจากอุปกรณ์ของท่าน
+                                และไม่มีการเก็บข้อมูลผู้เข้าเยี่ยมชมเว็บไซต์นี้ด้วยวิธีการใดก็ตาม</small></p>
                         <input type="file" id="fileInput" accept="image/*">
                     </div>
                 </div>
@@ -63,7 +61,7 @@
                     <div class="card-body">
                         <h5 class="card-title">ขยับข้อความ</h5>
                         <p><small><strong>คำแนะนำ: </strong>ปรับให้ข้อความอยู่ในวงกลมเส้นประ
-                                เมื่ออัปโหลดขึ้นบนโซเชียลมีเดีย จะได้ไม่มีส่วนของข้อความที่ตกขอบ (ภาพที่บันทึก
+                                เมื่อนำไปใช้บนโซเชียลมีเดีย จะได้ไม่มีส่วนของข้อความที่ตกขอบ (ภาพที่บันทึก
                                 จะไม่มีวงกลมเส้นประ)</small></p>
                         <label for="scaleSlider" class="form-label">ขนาด เล็ก-ใหญ่</label>
                         <input type="range" class="form-range" id="scaleSlider" min="0.1" max="1" step="0.01" value="1">
@@ -90,16 +88,28 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <hr />
+                <small><strong>หมายเหตุจากผู้พัฒนา: </strong>เว็บไซต์นี้เป็นผลงานส่วนบุคคล ไม่ผูกพันความคิดเห็น
+                    จุดยืน และ/หรือความเชี่ยวชาญ ขององค์กร หน่วยงานที่สังกัด และ/หรือการทำหน้าที่ในบทบาทใดก็ตาม
+                    ทั้งในอดีต ปัจจุบัน และอนาคต</small>
+            </div>
+        </div>
     </div>
     <div class="modal fade" id="finalRenderModal" tabindex="-1" aria-labelledby="finalRenderModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="finalRenderModalLabel">กดค้าง-คลิกขวา บันทึกรูปด้านล่างได้เลย</h1>
+                    <h1 class="modal-title fs-5" id="finalRenderModalLabel">สำเร็จ!</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
+                    <div class="alert alert-success" role="alert">
+                        สามารถกดค้าง (บนโทรศัพท์) หรือคลิกขวา (บนคอมพิวเตอร์) ที่รูปด้านล่าง เพื่อบันทึกได้ทันที<br />
+                        กดปิดที่มุมขวาบน หากต้องการปรับแต่งเพิ่มเติม หรือเลือกรูปใหม่
+                    </div>
                     <img id="finalRender" width=" 100%" />
                 </div>
             </div>

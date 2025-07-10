@@ -34,7 +34,10 @@
                         <h5 class="card-title">เลือกรูป</h5>
                         <p class="mb-0">แนะนำให้ครอปรูปให้เป็นสี่เหลี่ยมจัตุรัสก่อน</p>
                         <p><small>รูปของท่านจะถูกประมวลผลในเครื่องแบบออฟไลน์
-                                ไม่มีการส่งรูปมายังเซิร์ฟเวอร์ของเราแต่อย่างใด</small></p>
+                                โดยไม่มีการส่งรูปมายังเซิร์ฟเวอร์ของเรา นอกจากนี้
+                                เว็บไม่มีการเก็บข้อมูลส่วนตัว ไม่มีการใช้คุกกี้ไม่ว่าด้วยจุดประสงค์ใด (อาทิ
+                                การติดตามผู้ใช้ การบันทึกข้อมูลในเครื่องชั่วคราว) และไม่มีการส่งกลับข้อมูลทางไกล
+                                (telemetry) ไปสู่เซิร์ฟเวอร์ของเว็บนี้ และของบุคคลที่สามใดๆ</small></p>
                         <input type="file" id="fileInput" accept="image/*">
                     </div>
                 </div>
@@ -87,11 +90,14 @@
         integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
         crossorigin="anonymous"></script>
     <script>
-        const fileInput = document.getElementById('fileInput');
+        // Element declarations (and some configs)
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        // canvas is 1024x1024 for decent resolution but we have to scale this down
+        // so that display on devices are decent enough sort of
         canvas.style.width = "100%";
 
+        const fileInput = document.getElementById('fileInput');
         const scaleSlider = document.getElementById('scaleSlider');
         const xSlider = document.getElementById('xSlider');
         const ySlider = document.getElementById('ySlider');
@@ -109,9 +115,12 @@
         let overlayY = 0;
 
         function updateOffsetSliders() {
-            if (!overlayImg.complete) return;
+            // slider min-max settings so that leftmost scale sets logo to
+            // topmost-leftmost position (and rightmost -> bottommost-rightmost)
+            if (!overlayImg.complete) return;  // wait til image load properly
             const cw = canvas.width;
             const ch = canvas.height;
+            // sorta fancy math
             const oW = overlayImg.naturalWidth * overlayScale;
             const oH = overlayImg.naturalHeight * overlayScale;
             const maxX = Math.max(0, cw - oW);
@@ -127,6 +136,7 @@
         }
 
         function drawAll() {
+            // two step drawing: (1) user uploaded image, then (2) the logo
             const cw = canvas.width;
             const ch = canvas.height;
             ctx.clearRect(0, 0, cw, ch);
@@ -147,12 +157,16 @@
             }
         }
 
+        // so that (1) offsetSliders are set to proper values, (2) canvas is 'ready'
         overlayImg.onload = () => {
             updateOffsetSliders();
             drawAll();
         };
 
         fileInput.addEventListener('change', event => {
+            // event listener for image selection
+
+            // show second step divs (sliders, canvas preview, save button)
             const elements = document.querySelectorAll('.secondstep');
             console.log(elements);
             for (let i = 0; i < elements.length; i++) {
@@ -166,6 +180,8 @@
             reader.onload = e => {
                 const img = new Image();
                 img.onload = () => {
+                    // resize image so that it is centred in the canvas
+                    // TODO: scale the same way for the logo (will UI complexity too bad?)
                     const cw = canvas.width;
                     const ch = canvas.height;
                     const scale = Math.max(cw / img.width, ch / img.height);
@@ -181,6 +197,7 @@
             reader.readAsDataURL(file);
         });
 
+        // on all slider updates, redraw things--perf does not suck at least on iPhones
         scaleSlider.addEventListener('input', e => {
             overlayScale = parseFloat(e.target.value);
             updateOffsetSliders();
@@ -199,6 +216,8 @@
             updateOffsetSliders();
         }
 
+        // fuck you Safari on iOS for not being able to save canvas directly to images
+        // workaround: canvas content to base64 image/png -> put in <img> in modal
         function finalRenderer() {
             var data = canvas.toDataURL("image/png");
             finalRender.src = data;
